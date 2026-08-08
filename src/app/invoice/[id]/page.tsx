@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { ArrowLeft } from 'lucide-react'
 
 import { Badge } from '@/components/ui/badge'
@@ -12,7 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import type { Quote, QuoteItem } from '@/lib/types/quote'
+import { formatCurrency } from '@/lib/utils'
+import { fetchQuoteById, fetchQuoteItemsByQuoteId } from '@/lib/notion/quotes'
 
 import { CopyShareLinkButton } from './copy-share-link-button'
 
@@ -31,63 +33,24 @@ export async function generateMetadata({
   }
 }
 
-/**
- * 더미 견적서 상세 데이터입니다.
- * TODO: Task 006/007에서 id 기반 실제 노션 동기화 데이터로 교체합니다.
- */
-const dummyQuote: Quote = {
-  id: '1',
-  notionPageId: 'notion-1',
-  invoiceNumber: 'QT-2026-001',
-  clientName: '㈜테크노바',
-  issueDate: '2026-08-01',
-  expiryDate: '2026-08-31',
-  status: '발송됨',
-  totalAmount: 4800000,
-  shareToken: 'share-token-1',
-  viewedAt: '2026-08-03T10:12:00+09:00',
-}
-
-const dummyQuoteItems: QuoteItem[] = [
-  {
-    id: 'item-1',
-    notionPageId: 'notion-item-1',
-    quoteId: '1',
-    itemName: '웹사이트 기획 및 설계',
-    quantity: 1,
-    unitPrice: 1500000,
-  },
-  {
-    id: 'item-2',
-    notionPageId: 'notion-item-2',
-    quoteId: '1',
-    itemName: '프론트엔드 개발',
-    quantity: 1,
-    unitPrice: 2500000,
-  },
-  {
-    id: 'item-3',
-    notionPageId: 'notion-item-3',
-    quoteId: '1',
-    itemName: '유지보수 (1개월)',
-    quantity: 1,
-    unitPrice: 800000,
-  },
-]
-
-/** 금액을 "1,200,000원" 형식으로 표시합니다. */
-function formatAmount(amount: number) {
-  return `${amount.toLocaleString('ko-KR')}원`
-}
+// 60초 주기로 노션 데이터를 백그라운드 재검증한다(ISR). 실시간성이 중요하지 않은 서비스 특성상 충분한 주기.
+export const revalidate = 60
 
 /**
  * 견적서 상세 페이지 (/invoice/[id])
- * TODO: Task 006/007/008에서 견적서 상세 데이터 페칭 및 공유 링크 생성 로직을 연결합니다.
+ * shareToken은 별도 저장소 없이 견적서 ID를 그대로 사용한다(2026-08-08 결정).
  */
 export default async function QuoteDetailPage({
   params,
 }: QuoteDetailPageProps) {
   const { id } = await params
+  const quote = await fetchQuoteById(id)
+
+  if (!quote) {
+    notFound()
+  }
+
+  const quoteItems = await fetchQuoteItemsByQuoteId(id)
 
   return (
     <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
@@ -104,27 +67,21 @@ export default async function QuoteDetailPage({
         <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <CardTitle className="text-xl">
-                {dummyQuote.invoiceNumber}
-              </CardTitle>
-              <Badge variant="secondary">{dummyQuote.status}</Badge>
+              <CardTitle className="text-xl">{quote.invoiceNumber}</CardTitle>
+              <Badge variant="secondary">{quote.status}</Badge>
             </div>
-            <p className="text-muted-foreground mt-1 text-sm">
-              {/* TODO: id({id})로 실제 견적서를 조회해 표시 (Task 006) */}
-              견적서 ID: {id}
-            </p>
           </div>
-          <CopyShareLinkButton />
+          <CopyShareLinkButton quoteId={quote.id} />
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div>
             <p className="text-muted-foreground text-sm">클라이언트</p>
-            <p className="font-medium">{dummyQuote.clientName}</p>
+            <p className="font-medium">{quote.clientName}</p>
           </div>
           <div>
             <p className="text-muted-foreground text-sm">발행일 / 유효기간</p>
             <p className="font-medium">
-              {dummyQuote.issueDate} ~ {dummyQuote.expiryDate}
+              {quote.issueDate} ~ {quote.expiryDate}
             </p>
           </div>
         </CardContent>
@@ -148,15 +105,15 @@ export default async function QuoteDetailPage({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {dummyQuoteItems.map(item => (
+              {quoteItems.map(item => (
                 <TableRow key={item.id}>
                   <TableCell className="py-4 pl-6">{item.itemName}</TableCell>
                   <TableCell className="px-2 py-4">{item.quantity}</TableCell>
                   <TableCell className="px-2 py-4">
-                    {formatAmount(item.unitPrice)}
+                    {formatCurrency(item.unitPrice)}
                   </TableCell>
                   <TableCell className="py-4 pr-6 text-right">
-                    {formatAmount(item.quantity * item.unitPrice)}
+                    {formatCurrency(item.quantity * item.unitPrice)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -167,7 +124,7 @@ export default async function QuoteDetailPage({
           <div className="text-right">
             <p className="text-muted-foreground text-sm">총 견적 금액</p>
             <p className="text-xl font-bold">
-              {formatAmount(dummyQuote.totalAmount)}
+              {formatCurrency(quote.totalAmount)}
             </p>
           </div>
         </CardContent>

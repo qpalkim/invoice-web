@@ -1,17 +1,59 @@
 'use client'
 
-import { Download } from 'lucide-react'
+import { useState } from 'react'
+import { Download, Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
+import type { Quote, QuoteItem } from '@/lib/types/quote'
+
+interface PdfDownloadButtonProps {
+  quote: Quote
+  items: QuoteItem[]
+}
 
 /**
- * PDF 다운로드 버튼입니다. onClick이 필요해 Client Component로 분리했습니다.
- * TODO: @react-pdf/renderer 기반 PDF 생성 및 다운로드 로직 구현 (Task 009)
+ * PDF 다운로드 버튼입니다. onClick과 브라우저 API(Blob, URL)가 필요해 Client Component로 분리했습니다.
+ * @react-pdf/renderer의 pdf() API로 브라우저에서 직접 PDF를 생성해 다운로드한다(서버 왕복 없음).
+ * @react-pdf/renderer는 번들 용량이 커서 초기 페이지 로드에 포함하지 않고,
+ * 버튼 클릭 시점에 동적 import로 불러온다.
  */
-export function PdfDownloadButton() {
+export function PdfDownloadButton({ quote, items }: PdfDownloadButtonProps) {
+  const [isGenerating, setIsGenerating] = useState(false)
+
+  async function handleDownload() {
+    setIsGenerating(true)
+
+    try {
+      const [{ pdf }, { QuotePdfDocument }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('@/lib/pdf/quote-pdf-document'),
+      ])
+
+      const blob = await pdf(
+        <QuotePdfDocument quote={quote} items={items} />
+      ).toBlob()
+
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `${quote.invoiceNumber}.pdf`
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      toast.error('PDF 생성에 실패했습니다')
+    } finally {
+      setIsGenerating(false)
+    }
+  }
+
   return (
-    <Button size="lg" onClick={() => {}}>
-      <Download className="size-4" aria-hidden="true" />
+    <Button size="lg" onClick={handleDownload} disabled={isGenerating}>
+      {isGenerating ? (
+        <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+      ) : (
+        <Download className="size-4" aria-hidden="true" />
+      )}
       PDF 다운로드
     </Button>
   )

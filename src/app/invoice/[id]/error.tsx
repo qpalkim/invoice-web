@@ -1,0 +1,29 @@
+'use client'
+
+import { useEffect } from 'react'
+
+import { ErrorState } from '@/components/error-state'
+
+/**
+ * 견적서 상세 페이지(/invoice/[id]) 에러 바운더리.
+ * 노션 API 조회 실패 등 실제 I/O 실패를 사용자에게 안내한다.
+ */
+export default function QuoteDetailError({
+  error,
+}: {
+  error: Error & { digest?: string }
+  reset: () => void
+}) {
+  useEffect(() => {
+    console.error(error)
+  }, [error])
+
+  return (
+    <div className="container mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <ErrorState
+        title="견적서를 불러오지 못했습니다"
+        description="노션 데이터베이스 조회 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
+      />
+    </div>
+  )
+}
