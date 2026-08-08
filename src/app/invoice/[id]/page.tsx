@@ -81,7 +81,7 @@ function formatAmount(amount: number) {
 }
 
 /**
- * 견적서 상세 페이지 (/quotes/[id])
+ * 견적서 상세 페이지 (/invoice/[id])
  * TODO: Task 006/007/008에서 견적서 상세 데이터 페칭 및 공유 링크 생성 로직을 연결합니다.
  */
 export default async function QuoteDetailPage({
@@ -92,7 +92,7 @@ export default async function QuoteDetailPage({
   return (
     <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <Link
-        href="/quotes"
+        href="/invoice"
         className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />

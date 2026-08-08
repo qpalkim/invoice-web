@@ -67,7 +67,7 @@ function formatAmount(amount: number) {
 }
 
 /**
- * 견적서 목록 페이지 (/quotes)
+ * 견적서 목록 페이지 (/invoice)
  * TODO: Task 006/007에서 노션 API 연동 및 데이터 페칭 로직을 연결합니다.
  */
 export default function QuotesPage() {
@@ -98,7 +98,7 @@ export default function QuotesPage() {
                 <TableRow key={quote.id}>
                   <TableCell className="pl-6">
                     <Link
-                      href={`/quotes/${quote.id}`}
+                      href={`/invoice/${quote.id}`}
                       className="font-medium hover:underline"
                     >
                       {quote.invoiceNumber}
@@ -131,7 +131,7 @@ export default function QuotesPage() {
       {/* 모바일: 카드 뷰 */}
       <div className="grid gap-3 md:hidden">
         {dummyQuotes.map(quote => (
-          <Link key={quote.id} href={`/quotes/${quote.id}`}>
+          <Link key={quote.id} href={`/invoice/${quote.id}`}>
             <Card>
               <CardContent className="space-y-2">
                 <div className="flex items-center justify-between">
