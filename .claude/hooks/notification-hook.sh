@@ -37,10 +37,18 @@ PAYLOAD=$(printf '{"channel": "#claude-code", "username": "Claude Code", "text":
 
 echo "DEBUG: PAYLOAD = '$PAYLOAD'" >&2
 
+# 한글이 포함된 payload를 curl 커맨드라인 인자로 직접 넘기면 Git Bash(MSYS)가
+# 네이티브 실행파일(curl.exe) 호출 시 인자를 시스템 ANSI 코드페이지로 변환하면서
+# UTF-8 문자가 깨지므로, 임시 파일에 써서 파일 경로만 인자로 전달한다.
+PAYLOAD_FILE=$(mktemp)
+printf '%s' "$PAYLOAD" > "$PAYLOAD_FILE"
+
 # Slack으로 알림 전송
 curl -X POST \
-  --data-urlencode "payload=$PAYLOAD" \
+  --data-urlencode "payload@$PAYLOAD_FILE" \
   "$SLACK_WEBHOOK_URL" > /dev/null 2>&1
+
+rm -f "$PAYLOAD_FILE"
 
 # 성공 여부 확인
 if [ $? -eq 0 ]; then
