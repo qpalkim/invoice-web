@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/table'
 import { formatCurrency } from '@/lib/utils'
 import { fetchQuoteById, fetchQuoteItemsByQuoteId } from '@/lib/notion/quotes'
+import { PdfDownloadButton } from '@/components/pdf-download-button'
 
 import { CopyShareLinkButton } from './copy-share-link-button'
 
@@ -71,7 +72,14 @@ export default async function QuoteDetailPage({
               <Badge variant="secondary">{quote.status}</Badge>
             </div>
           </div>
-          <CopyShareLinkButton quoteId={quote.id} />
+          <div className="flex gap-2">
+            <CopyShareLinkButton quoteId={quote.id} />
+            <PdfDownloadButton
+              quote={quote}
+              items={quoteItems}
+              size="default"
+            />
+          </div>
         </CardHeader>
         <CardContent className="grid gap-4 sm:grid-cols-2">
           <div>

@@ -16,8 +16,12 @@
 ## 관련 파일
 
 - `src/lib/pdf/quote-pdf-document.tsx` (신규) — `QuotePdfDocument` PDF 문서 템플릿(견적 정보, 품목 표, 합계)
-- `src/app/q/[shareToken]/pdf-download-button.tsx` (수정) — `quote`/`items` prop 수신, 클릭 시 동적 import 후 PDF 생성·다운로드, 로딩 스피너 상태 추가
-- `src/app/q/[shareToken]/page.tsx` (수정) — `PdfDownloadButton`에 실제 `quote`/`items` 전달
+- `src/components/pdf-download-button.tsx` (수정, 2026-08-08에 `src/app/q/[shareToken]/`에서 이동) — `quote`/`items` prop 수신, 클릭 시 동적 import 후 PDF 생성·다운로드, 로딩 스피너 상태 추가. `size` prop(기본 `lg`)으로 페이지별 버튼 크기 조절
+- `src/app/q/[shareToken]/page.tsx`, `src/app/invoice/[id]/page.tsx` (수정) — `PdfDownloadButton`에 실제 `quote`/`items` 전달
+
+## 추가 결정 (2026-08-08)
+
+관리자 상세 페이지(`/invoice/[id]`)와 공개 페이지(`/q/[shareToken]`)를 기능적으로 구분하지 않기로 결정 — 애초에 인증이 없어 "관리자 전용"이라는 개념이 약하므로, PDF 다운로드도 두 페이지 모두에서 가능해야 한다는 사용자 피드백을 반영. `PdfDownloadButton`을 `src/app/q/[shareToken]/`에서 `src/components/`로 옮겨 두 페이지가 공용으로 사용하도록 함(상세 페이지는 `size="default"`로 "공유 링크 복사" 버튼과 나란히 배치).
 
 ## 수락 기준
 

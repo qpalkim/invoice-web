@@ -98,6 +98,7 @@
   - ✅ 공개 페이지 "PDF 다운로드" 버튼과 실제 생성 로직 연동
   - ✅ Noto Sans KR 한글 폰트(Google Fonts CDN) 및 금액 포맷 적용
   - ✅ Playwright MCP로 PDF 다운로드 트리거, 파일 시그니처·내용(한글 포함) 검증
+  - ✅ (2026-08-08 추가) 관리자/공개 페이지를 구분하지 않기로 결정 — `PdfDownloadButton`을 `src/components/`로 공용화해 `/invoice/[id]` 상세 페이지에도 노출(기존엔 `/q/[shareToken]` 공개 페이지에만 있었음)
 
 ### Phase 4: 고급 기능 및 최적화
 
@@ -116,7 +117,7 @@
   - 404/500 에러 처리 개선
   - CORS 정책 설정
 
-- **Task 012: 보안 및 에러 처리 강화**
+- **Task 012: 테스트 및 배포**
   - 단위 테스트 작성(컴포넌트 유틸리티)
   - 통합 테스트(API, 페이지)
   - E2E 테스트 시나리오 구현(Playwright MCP 사용)

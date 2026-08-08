@@ -12,8 +12,7 @@ import {
 } from '@/components/ui/table'
 import { formatCurrency } from '@/lib/utils'
 import { fetchQuoteById, fetchQuoteItemsByQuoteId } from '@/lib/notion/quotes'
-
-import { PdfDownloadButton } from './pdf-download-button'
+import { PdfDownloadButton } from '@/components/pdf-download-button'
 
 interface PublicQuotePageProps {
   params: Promise<{ shareToken: string }>
