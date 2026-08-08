@@ -42,3 +42,7 @@ next-env.d.ts
 
 # claude code (로컬 개인 설정)
 .claude/settings.local.json
+
+# shrimp-task-manager (로컬 도구 상태)
+shrimp-rules.md
+shrimp_data/
