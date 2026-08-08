@@ -128,19 +128,23 @@ export default async function PublicQuotePage({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="pl-6">품목명</TableHead>
-                  <TableHead>수량</TableHead>
-                  <TableHead>단가</TableHead>
-                  <TableHead className="pr-6 text-right">소계</TableHead>
+                  <TableHead className="h-12 py-3 pl-6">품목명</TableHead>
+                  <TableHead className="h-12 py-3">수량</TableHead>
+                  <TableHead className="h-12 py-3">단가</TableHead>
+                  <TableHead className="h-12 py-3 pr-6 text-right">
+                    소계
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {dummyQuoteItems.map(item => (
                   <TableRow key={item.id}>
-                    <TableCell className="pl-6">{item.itemName}</TableCell>
-                    <TableCell>{item.quantity}</TableCell>
-                    <TableCell>{formatAmount(item.unitPrice)}</TableCell>
-                    <TableCell className="pr-6 text-right">
+                    <TableCell className="py-4 pl-6">{item.itemName}</TableCell>
+                    <TableCell className="px-2 py-4">{item.quantity}</TableCell>
+                    <TableCell className="px-2 py-4">
+                      {formatAmount(item.unitPrice)}
+                    </TableCell>
+                    <TableCell className="py-4 pr-6 text-right">
                       {formatAmount(item.quantity * item.unitPrice)}
                     </TableCell>
                   </TableRow>

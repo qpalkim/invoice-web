@@ -8,7 +8,7 @@ import Link from 'next/link'
 export function AdminHeader() {
   return (
     <header className="border-border bg-background sticky top-0 z-10 border-b">
-      <div className="container mx-auto flex h-14 items-center justify-between px-4">
+      <div className="container mx-auto flex h-14 max-w-3xl items-center justify-between px-4">
         <Link href="/quotes" className="font-semibold tracking-tight">
           견적서 확인
         </Link>
