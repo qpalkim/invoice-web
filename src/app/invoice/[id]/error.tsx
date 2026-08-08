@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 
 import { ErrorState } from '@/components/error-state'
+import { logError } from '@/lib/logger'
 
 /**
  * 견적서 상세 페이지(/invoice/[id]) 에러 바운더리.
@@ -15,7 +16,7 @@ export default function QuoteDetailError({
   reset: () => void
 }) {
   useEffect(() => {
-    console.error(error)
+    logError('견적서 상세 페이지 렌더링 실패', error, { digest: error.digest })
   }, [error])
 
   return (

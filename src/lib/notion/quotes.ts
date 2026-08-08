@@ -7,6 +7,7 @@ import {
 } from '@notionhq/client'
 
 import { env } from '@/lib/env'
+import { logError, logWarn } from '@/lib/logger'
 import { mapPageToQuote, mapPageToQuoteItem } from '@/lib/notion/mappers'
 import { notion } from '@/lib/notion/client'
 import type { Quote, QuoteItem } from '@/lib/types/quote'
@@ -52,13 +53,18 @@ async function getQuoteItemsDataSourceId(): Promise<string> {
 
 /** 노션 견적서 데이터베이스에서 전체 견적서 목록을 조회합니다. */
 export async function fetchQuotesFromNotion(): Promise<Quote[]> {
-  const dataSourceId = await getQuotesDataSourceId()
+  try {
+    const dataSourceId = await getQuotesDataSourceId()
 
-  const pages = await collectPaginatedAPI(notion.dataSources.query, {
-    data_source_id: dataSourceId,
-  })
+    const pages = await collectPaginatedAPI(notion.dataSources.query, {
+      data_source_id: dataSourceId,
+    })
 
-  return pages.filter(isFullPage).map(mapPageToQuote)
+    return pages.filter(isFullPage).map(mapPageToQuote)
+  } catch (error) {
+    logError('견적서 목록 조회 실패', error)
+    throw error
+  }
 }
 
 /** 노션 페이지 ID로 견적서 하나를 조회합니다. 존재하지 않으면 null을 반환합니다. */
@@ -74,8 +80,14 @@ export async function fetchQuoteById(id: string): Promise<Quote | null> {
       (error.code === APIErrorCode.ObjectNotFound ||
         error.code === APIErrorCode.ValidationError)
     ) {
+      // 에러는 아니지만, 무작위 UUID로 다른 사람의 견적서를 스캔하려는 시도를 모니터링할 수 있도록 warn으로 남긴다.
+      logWarn('존재하지 않거나 유효하지 않은 견적서 ID로 접근', {
+        quoteId: id,
+        code: error.code,
+      })
       return null
     }
+    logError('견적서 단건 조회 실패', error, { quoteId: id })
     throw error
   }
 }
@@ -84,15 +96,22 @@ export async function fetchQuoteById(id: string): Promise<Quote | null> {
 export async function fetchQuoteItemsByQuoteId(
   quoteId: string
 ): Promise<QuoteItem[]> {
-  const itemsDataSourceId = await getQuoteItemsDataSourceId()
+  try {
+    const itemsDataSourceId = await getQuoteItemsDataSourceId()
 
-  const pages = await collectPaginatedAPI(notion.dataSources.query, {
-    data_source_id: itemsDataSourceId,
-    filter: {
-      property: 'invoices',
-      relation: { contains: quoteId },
-    },
-  })
+    const pages = await collectPaginatedAPI(notion.dataSources.query, {
+      data_source_id: itemsDataSourceId,
+      filter: {
+        property: 'invoices',
+        relation: { contains: quoteId },
+      },
+    })
 
-  return pages.filter(isFullPage).map(page => mapPageToQuoteItem(page, quoteId))
+    return pages
+      .filter(isFullPage)
+      .map(page => mapPageToQuoteItem(page, quoteId))
+  } catch (error) {
+    logError('견적서 품목 조회 실패', error, { quoteId })
+    throw error
+  }
 }
