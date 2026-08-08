@@ -110,20 +110,20 @@
   - ✅ 환경 변수 문서화 (`.env.example`) 및 Vercel 배포 설정 — `.env.example`, `docs/guides/deployment.md` 신규 작성(실제 Vercel 계정 연동은 범위 밖)
   - ✅ 프로덕션 빌드 검증 (`npm run check-all`, `npm run build`) — `turbopack.root` 설정으로 workspace root 경고도 제거
 
-- **Task 011: 보안 및 에러 처리 강화**
-  - API 키 보안 검증
-  - Rate limiting 구현
-  - 상세 에러 로깅 시스템
-  - 404/500 에러 처리 개선
-  - CORS 정책 설정
+- **Task 011: 보안 및 에러 처리 강화** ✅ - 완료 (`/tasks/011-security-error-handling.md` 참고)
+  - ✅ API 키 보안 검증 — `NOTION_API_KEY`/`SUPABASE_SERVICE_ROLE_KEY`가 서버 전용 모듈에서만 사용되고 클라이언트 컴포넌트에서 참조되지 않음을 grep으로 확인(문제 없음)
+  - ✅ Rate limiting 구현 — `src/middleware.ts` 신규 작성, `/invoice/*`·`/q/*`에 IP 기준 슬라이딩 윈도우(60초/30회) 적용, 초과 시 429 응답(서버리스 멀티 인스턴스 환경에서 완벽한 보장이 아니라는 한계 문서화)
+  - ✅ 상세 에러 로깅 시스템 — `src/lib/logger.ts` 신규 작성(구조화 JSON 콘솔 로깅), 노션 조회 함수 3종과 각 라우트 `error.tsx`에 연동
+  - ✅ 404/500 에러 처리 개선 — 루트 `not-found.tsx`, `global-error.tsx` 신규 추가(기존 `EmptyState`/`ErrorState` 재사용)
+  - ⏭️ CORS 정책 설정 → **범위 제외** (2026-08-08): 실제 API 라우트(`src/app/api`)가 없어 적용 대상이 없음. 향후 API 라우트 추가 시 진행
 
-- **Task 012: 테스트 및 배포**
-  - 단위 테스트 작성(컴포넌트 유틸리티)
-  - 통합 테스트(API, 페이지)
-  - E2E 테스트 시나리오 구현(Playwright MCP 사용)
-  - Vercel 배포 설정
+- **Task 012: 테스트 및 배포** ✅ - 완료 (`/tasks/012-testing-deployment.md` 참고)
+  - ✅ 단위 테스트 작성 — `vitest` 신규 도입, `formatCurrency`/`mapPageToQuote`/`mapPageToQuoteItem`/rate limit 로직 테스트
+  - ✅ 통합 테스트 — `fetchQuoteById`(ObjectNotFound/ValidationError 분기 포함)·`fetchQuotesFromNotion`·`fetchQuoteItemsByQuoteId`를 `@notionhq/client` mock으로 테스트(총 19개 테스트 통과)
+  - ✅ E2E 테스트 시나리오 구현(Playwright MCP 사용) — 핵심 플로우는 Task 007~009에서 이미 검증 완료라 재검증하지 않고, 신규 기능(rate limit 429 전환, 신규 404 페이지)을 실제 dev 서버로 검증
+  - ✅ Vercel 배포 설정 — `docs/guides/deployment.md`에 rate limiting 한계·테스트 실행법 보강, `package.json`에 `engines.node` 추가(실제 계정 연동은 Task 010과 동일하게 범위 밖 유지)
 
 ---
 
 **📅 최종 업데이트**: 2026-08-08
-**📊 진행 상황**: Phase 1~2 완료. Phase 3: Task 006(부분, Supabase 캐싱 제외)·007·009 완료, Task 008 부분 완료(열람 기록 제외), Task 005는 인증 제외 결정으로 범위에서 제외, Task 008-1 착수 전. Phase 4: Task 010 완료, Task 011·012 착수 전
+**📊 진행 상황**: Phase 1~2 완료. Phase 3: Task 006(부분, Supabase 캐싱 제외)·007·009 완료, Task 008 부분 완료(열람 기록 제외), Task 005는 인증 제외 결정으로 범위에서 제외, Task 008-1 착수 전. Phase 4: Task 010·011·012 완료 — 로드맵상 계획된 모든 Task 완료(Task 008-1 통합 테스트, Task 008 열람 기록은 별도 후속 작업으로 남음)
