@@ -30,9 +30,11 @@ export const revalidate = 60
  */
 export default async function QuotesPage() {
   const quotes = await fetchQuotesFromNotion()
+  const totalCount = quotes.length
+  const unviewedCount = quotes.filter(quote => !quote.viewedAt).length
 
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+    <div className="container mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <div className="mb-6">
         <h1 className="text-2xl font-bold">견적서 목록</h1>
         <p className="text-muted-foreground mt-1 text-sm">
@@ -47,6 +49,22 @@ export default async function QuotesPage() {
         />
       ) : (
         <>
+          {/* 요약 카드: 전체 견적서 수 / 미열람 건수 */}
+          <div className="mb-6 grid grid-cols-2 gap-4 sm:max-w-sm">
+            <Card>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">전체 견적서</p>
+                <p className="text-2xl font-bold">{totalCount}건</p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <p className="text-muted-foreground text-sm">미열람</p>
+                <p className="text-2xl font-bold">{unviewedCount}건</p>
+              </CardContent>
+            </Card>
+          </div>
+
           {/* 데스크톱/태블릿: 테이블 뷰 */}
           <Card className="hidden md:block">
             <CardContent className="px-0">

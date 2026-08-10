@@ -1,4 +1,4 @@
-import { AdminHeader } from '@/components/layout/admin-header'
+import { AdminSidebar } from '@/components/layout/admin-sidebar'
 
 /**
  * 견적서 관리 라우트(/invoice, /invoice/[id])를 감싸는 공통 레이아웃입니다.
@@ -9,10 +9,5 @@ export default function QuotesLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  return (
-    <div className="bg-background min-h-screen">
-      <AdminHeader />
-      {children}
-    </div>
-  )
+  return <AdminSidebar>{children}</AdminSidebar>
 }
