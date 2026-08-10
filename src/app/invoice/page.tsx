@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 
+import { CopyShareLinkButton } from '@/components/copy-share-link-button'
 import { EmptyState } from '@/components/empty-state'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
@@ -75,7 +76,8 @@ export default async function QuotesPage() {
                     <TableHead>클라이언트</TableHead>
                     <TableHead>상태</TableHead>
                     <TableHead>금액</TableHead>
-                    <TableHead className="pr-6">열람 여부</TableHead>
+                    <TableHead>열람 여부</TableHead>
+                    <TableHead className="pr-6">공유</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -94,7 +96,7 @@ export default async function QuotesPage() {
                         <Badge variant="secondary">{quote.status}</Badge>
                       </TableCell>
                       <TableCell>{formatCurrency(quote.totalAmount)}</TableCell>
-                      <TableCell className="pr-6">
+                      <TableCell>
                         {quote.viewedAt ? (
                           <Badge variant="outline">열람함</Badge>
                         ) : (
@@ -106,6 +108,12 @@ export default async function QuotesPage() {
                           </Badge>
                         )}
                       </TableCell>
+                      <TableCell className="pr-6">
+                        <CopyShareLinkButton
+                          quoteId={quote.id}
+                          variant="icon"
+                        />
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -116,34 +124,45 @@ export default async function QuotesPage() {
           {/* 모바일: 카드 뷰 */}
           <div className="grid gap-3 md:hidden">
             {quotes.map(quote => (
-              <Link key={quote.id} href={`/invoice/${quote.id}`}>
-                <Card>
-                  <CardContent className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">{quote.invoiceNumber}</span>
-                      <Badge variant="secondary">{quote.status}</Badge>
-                    </div>
-                    <p className="text-muted-foreground text-sm">
-                      {quote.clientName}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-semibold">
-                        {formatCurrency(quote.totalAmount)}
-                      </span>
-                      {quote.viewedAt ? (
-                        <Badge variant="outline">열람함</Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="text-muted-foreground"
-                        >
-                          미열람
-                        </Badge>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
+              // 복사 버튼을 Link(카드 전체 클릭 영역)와 형제로 배치해
+              // <button>이 <a> 안에 중첩되지 않도록 하고, 버튼 클릭이 상세 이동으로 새지 않게 한다.
+              <div key={quote.id} className="relative">
+                <Link href={`/invoice/${quote.id}`} className="block">
+                  <Card>
+                    <CardContent className="space-y-2 pr-12">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium">
+                          {quote.invoiceNumber}
+                        </span>
+                        <Badge variant="secondary">{quote.status}</Badge>
+                      </div>
+                      <p className="text-muted-foreground text-sm">
+                        {quote.clientName}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-semibold">
+                          {formatCurrency(quote.totalAmount)}
+                        </span>
+                        {quote.viewedAt ? (
+                          <Badge variant="outline">열람함</Badge>
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="text-muted-foreground"
+                          >
+                            미열람
+                          </Badge>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+                <CopyShareLinkButton
+                  quoteId={quote.id}
+                  variant="icon"
+                  className="absolute top-4 right-4"
+                />
+              </div>
             ))}
           </div>
         </>

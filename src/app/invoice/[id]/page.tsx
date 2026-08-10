@@ -16,8 +16,7 @@ import {
 import { formatCurrency } from '@/lib/utils'
 import { fetchQuoteById, fetchQuoteItemsByQuoteId } from '@/lib/notion/quotes'
 import { PdfDownloadButton } from '@/components/pdf-download-button'
-
-import { CopyShareLinkButton } from './copy-share-link-button'
+import { CopyShareLinkButton } from '@/components/copy-share-link-button'
 
 interface QuoteDetailPageProps {
   params: Promise<{ id: string }>
