@@ -74,7 +74,7 @@ MVP로 완성한 견적서 확인 서비스를 실제 운영에 맞게 다듬는
   - 새로고침 시 테마가 깜빡이지 않도록 `ThemeProvider`의 `attribute`/`defaultTheme`/`enableSystem` 설정과 루트 레이아웃(`src/app/layout.tsx`)의 `suppressHydrationWarning` 적용 상태 점검
   - Playwright MCP 테스트: 라이트/다크/시스템 각 옵션 클릭 시 `html` 요소의 `class`/`data-theme` 속성 변경 확인, 새로고침 후 선택한 테마가 유지되는지 확인
 
-- **Task 017: 전체 페이지 다크모드 스타일 점검 및 보정**
+- ✅ **Task 017: 전체 페이지 다크모드 스타일 점검 및 보정**
   - 견적서 목록(`/invoice`), 상세(`/invoice/[id]`), 공개(`/q/[shareToken]`) 페이지의 색상 대비를 다크모드에서 점검 (텍스트/배경/보더/뱃지/카드 등 하드코딩된 색상값 여부 확인)
   - PDF 다운로드 버튼, 공유 링크 복사 버튼, `EmptyState`/`ErrorState`, `not-found`/`global-error` 페이지 등 공용 컴포넌트의 다크모드 대응 확인
   - PDF 미리보기/생성 자체는 `@react-pdf/renderer`로 별도 렌더링되어 다크모드 영향이 없음을 확인하고, 다운로드 버튼 등 트리거 UI만 다크모드 스타일 점검 대상으로 명확히 함
@@ -92,4 +92,4 @@ MVP로 완성한 견적서 확인 서비스를 실제 운영에 맞게 다듬는
 ---
 
 **📅 최종 업데이트**: 2026-08-10
-**📊 진행 상황**: MVP(Phase 1~4, Task 001~012) 완료. Phase 5(Task 013·014, 관리자 사이드바 레이아웃 + 목록 대시보드 UI) 완료. Phase 6(Task 015, 목록 공유 링크 복사) 완료. Phase 7 Task 016(테마 토글 노출) 완료, Task 017(다크모드 스타일 점검)이 다음 우선순위 작업. Phase 8(Task 018)은 착수 전(대기 중).
+**📊 진행 상황**: MVP(Phase 1~4, Task 001~012) 완료. Phase 5(Task 013·014, 관리자 사이드바 레이아웃 + 목록 대시보드 UI) 완료. Phase 6(Task 015, 목록 공유 링크 복사) 완료. Phase 7(Task 016·017, 테마 토글 노출 + 다크모드 스타일 점검) 완료. Phase 8 Task 018(고도화 기능 통합 테스트)이 다음이자 마지막 우선순위 작업.
