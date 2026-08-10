@@ -68,7 +68,7 @@ MVP로 완성한 견적서 확인 서비스를 실제 운영에 맞게 다듬는
 
 ### Phase 7: 다크모드 지원
 
-- **Task 016: 다크모드 테마 토글 UI 노출 (관리자/공개 페이지)**
+- ✅ **Task 016: 다크모드 테마 토글 UI 노출 (관리자/공개 페이지)**
   - 이미 구현된 `ThemeToggle`(`src/components/theme-toggle.tsx`)을 Task 013의 관리자 레이아웃 상단 바에 연결
   - 공개 페이지(`src/app/q/[shareToken]/page.tsx`)에도 헤더 영역을 신설하거나 기존 상단에 테마 토글 노출 (클라이언트가 비로그인으로 접근하는 페이지이므로 최소한의 UI로 배치)
   - 새로고침 시 테마가 깜빡이지 않도록 `ThemeProvider`의 `attribute`/`defaultTheme`/`enableSystem` 설정과 루트 레이아웃(`src/app/layout.tsx`)의 `suppressHydrationWarning` 적용 상태 점검
@@ -92,4 +92,4 @@ MVP로 완성한 견적서 확인 서비스를 실제 운영에 맞게 다듬는
 ---
 
 **📅 최종 업데이트**: 2026-08-10
-**📊 진행 상황**: MVP(Phase 1~4, Task 001~012) 완료. Phase 5(Task 013·014, 관리자 사이드바 레이아웃 + 목록 대시보드 UI) 완료. Phase 6(Task 015, 목록 공유 링크 복사) 완료. Phase 7~8(Task 016~018)은 착수 전(대기 중), Task 016이 다음 우선순위 작업.
+**📊 진행 상황**: MVP(Phase 1~4, Task 001~012) 완료. Phase 5(Task 013·014, 관리자 사이드바 레이아웃 + 목록 대시보드 UI) 완료. Phase 6(Task 015, 목록 공유 링크 복사) 완료. Phase 7 Task 016(테마 토글 노출) 완료, Task 017(다크모드 스타일 점검)이 다음 우선순위 작업. Phase 8(Task 018)은 착수 전(대기 중).

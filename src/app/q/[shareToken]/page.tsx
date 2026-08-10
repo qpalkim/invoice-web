@@ -13,6 +13,7 @@ import {
 import { formatCurrency } from '@/lib/utils'
 import { fetchQuoteById, fetchQuoteItemsByQuoteId } from '@/lib/notion/quotes'
 import { PdfDownloadButton } from '@/components/pdf-download-button'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 interface PublicQuotePageProps {
   params: Promise<{ shareToken: string }>
@@ -54,11 +55,14 @@ export default async function PublicQuotePage({
   return (
     <div className="bg-background min-h-screen">
       <div className="container mx-auto max-w-3xl space-y-6 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
-        <div>
-          <h1 className="text-2xl font-bold">견적서 확인</h1>
-          <p className="text-muted-foreground mt-1 text-sm">
-            {quote.invoiceNumber}
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">견적서 확인</h1>
+            <p className="text-muted-foreground mt-1 text-sm">
+              {quote.invoiceNumber}
+            </p>
+          </div>
+          <ThemeToggle />
         </div>
 
         {/* 견적서 기본 정보 */}

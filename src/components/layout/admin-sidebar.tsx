@@ -7,6 +7,7 @@ import { FileText, Menu } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/theme-toggle'
 import {
   Sheet,
   SheetContent,
@@ -123,8 +124,9 @@ export function AdminSidebar({ children }: { children: React.ReactNode }) {
             견적서 확인
           </Link>
 
-          {/* TODO(Task 016): ThemeToggle 연동 */}
-          <div className="ml-auto size-9" aria-hidden="true" />
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </header>
 
         <main className="flex-1">{children}</main>
